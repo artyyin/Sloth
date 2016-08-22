@@ -146,6 +146,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\SysManage\SysManageAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -546,6 +547,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\themes\material\images\Thumbs.db" />
+    <Content Include="Areas\SysManage\Views\Web.config" />
     <None Include="Scripts\jquery-1.11.3.intellisense.js" />
     <Content Include="Scripts\easyloader.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
@@ -609,6 +611,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\SysManage\Controllers\" />
+    <Folder Include="Areas\SysManage\Models\" />
+    <Folder Include="Areas\SysManage\Views\Shared\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
