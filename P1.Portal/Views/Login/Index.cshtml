@@ -1,0 +1,78 @@
+﻿@*引用Jquery文件的JS脚本*@
+<script src="~/Scripts/jquery-1.11.3.min.js"></script>
+@*引用Jquery文件的JS脚本*@
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script type="text/javascript">
+    //当用户刷新页面触发的方法
+    $(function () {
+        //实现用户登录的方法
+        LoginUserInfo();
+        //单击的时候修改验证码的方法
+        ClickRemoveChangeCode();
+    });
+    //实现用户登录
+    function LoginUserInfo() {
+        //获取单击用户登录按钮的事件
+        $("#btnLogin").click(function () {
+            //首先获取到要传递到控制器的参数，并且狗造成Json。UName，Pwd，Code
+            var postData = {
+                UserName: $("#UName").val(),
+                Passwd: $("#Pwd").val(),
+                Code: $("#Code").val()
+            };
+            //发送异步请求实现登录
+            $.post("/Login/CheckUserInfo", postData, function (data) {
+                if (data == "OK") {
+                    window.location.href = "/Home/Index";
+                } else {
+                    alert(data);
+                    window.location.href = "/Login/Index";
+                }
+            });
+        });
+    }
+    //单击重新改变验证码
+    function ClickRemoveChangeCode() {
+        //首先我们获取到验证码的路径
+        var code = $("#imgCode").attr("src");
+        //然后重新给验证码的路径赋值
+        $("#imgCode").attr("src", code + "1");
+    }
+</script>
+<script type="text/javascript">
+    //单击重新改变验证码
+    function ClickRemoveChangeCode() {
+        //首先我们获取到验证码的路径
+        var code = $("#imgCode").attr("src");
+        //然后重新给验证码的路径赋值
+        $("#imgCode").attr("src", code + "1");
+    }
+</script>
+
+
+<div class="login" id="thetable">		
+	<div class="user">
+		<label for="">			用户名：		</label>			
+	    <input id="UName" name="username" class="text_nor" style="width:170px;" tabindex="1" accesskey="n" type="text" value="" autocomplete="on">		
+	</div>
+	<div class="passw">
+        <label for="">密　码：</label>
+		<input id="Pwd" name="password" class="text_nor" style="width:170px;" tabindex="2" accesskey="p" type="password" value="" autocomplete="off">
+	</div>
+	<div class="yzm" id="yzm">
+        <ul>
+           <li class="user_main_text">验证码： </li>
+           <li class="user_main_input">
+               <input type="text" class="TxtPasswordCssClass" id="Code" name="Code">
+           </li>
+        </ul>
+        <ul>
+           <li class="user_main_text">验证码： </li>
+           <li class="user_main_input">
+        <img src="/Login/CheckCode?ID=1" id="imgCode" alt="单击可刷新" onclick="ClickRemoveChangeCode()"  />
+        <a href="javascript:void(0)" onclick="ClickRemoveChangeCode();return false;">看不清</a>
+            </li>
+        </ul>
+	</div>
+    <input id="btnLogin" title= "登录" type ="submit" />
+</div>

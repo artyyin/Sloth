@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>实现用户的增删改查</title>
+    @*添加Jquery EasyUI的样式*@
+    <link href="~/Content/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Content/themes/icon.css" rel="stylesheet" />
+    @*添加Jquery，EasyUI和easyUI的语言包的JS文件*@
+    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+    <script src="~/Scripts/jquery.easyui-1.4.5.min.js"></script>
+    <script src="~/Scripts/locale/easyui-lang-zh_CN.js"></script>
+    @*实现对EasyUI的DataGird控件操作的JS代码*@
+    <script type="text/javascript">
+        $(function () {
+            //当页面首次刷新的时候执行的事件
+            initTable();
+            bindRegisteButtonClickEvent();
+        });
+        //实现对DataGird控件的绑定操作
+        function initTable() {
+            $('#test').datagrid({   //定位到Table标签，Table标签的ID是test
+                //   UserInfo是控制器，GetAllUserInfos是控制器中获取用户数据的一个Action
+                url: '/User/GetAllUserInfos',   //指向后台的Action来获取当前用户的信息的Json格式的数据
+                //title: '用户的展示',  //标识
+                //下面的这些属性如果谁不太清楚的话我建议去官方网站去学习或者在群里我们讨论，这里就不说了
+                iconCls: 'icon-save',                
+                nowrap: true,
+                autoRowHeight: false,
+                striped: true,
+                collapsible: true,
+                pagination: true,
+                rownumbers: true,
+                sortName: 'UserID',
+                sortOrder: 'desc',
+                remoteSort: false,
+                idField: 'UserID',
+                frozenColumns: [[
+                    { field: 'ck', checkbox: true },
+                    { title: '主键', field: 'UserID', width: 80, sortable: true },
+                    { title: '用户名', field: 'UserName', width: 120, sortable: true },
+                    { title: '密码', field: 'Password', width: 100, sortable: true },
+                    { title: '修改时间', field: 'ModifyTime', width: 100, sortable: true }
+                ]],
+                toolbar: [{
+                    id: 'btnadd',
+                    text: '添加',
+                    iconCls: 'icon-add',
+                    handler: function () {                        
+                        $('#DivAddUser').window('open');
+                    }
+                }, {
+                    id: 'btncut',
+                    text: '修改',
+                    iconCls: 'icon-cut',
+                    handler: function () {
+                        $('#btncut').linkbutton('enable');
+                    }
+                }, '-', {
+                    id: '删除',
+                    text: 'Save',
+                    iconCls: 'icon-cancel',
+                }]
+            });
+        }
+        //绑定注册按钮的事件
+        function bindRegisteButtonClickEvent() {
+            $("#btnRegist").click(function () {
+                alert("btnRegist");
+                //判断用户的信息是否通过验证
+                var validate = $("#ff").form('validate');
+                if (validate == false) {
+                    return false;
+                }
+                //获取参数传递给前台
+                var postData = {
+                    UserName: $("#UserName").val(),
+                    RealName: $("#RealName").val(),
+                    UserPassword: $("#Password").val(),
+                    Email: $("#Email").val(),
+                    SecurityLevel: $("#SecurityLevel").combobox('getValue'),
+                    Gender: $('input[name="Gender"]:checked').val(),
+                    Birthday: $("#Birthday").datebox('getValue'),
+                    Mobile: $("#Mobile").val(),
+                    Telephone: $("#Telephone").val(),
+                    QICQ: $("#QICQ").val(),
+                    SortCode: $("#SortCode").val(),
+                    Description: $("#Description").val()
+                };
+                //发送异步请求到后台保存用户数据
+                $.post("/UserInfo/RegisterUser", postData, function (data) {
+                    if (data = "OK") {
+                        //添加成功  1.关闭弹出层，2.刷新DataGird
+                        alert("添加成功");
+                        $("#DivAddUser").dialog("close");
+                        $("#test").datagrid("reload");
+                    }
+                    else {
+                        alert("添加失败，请您检查");
+                    }
+                });
+            });
+        }
+    </script>
+</head>
+<body style="margin:1px">
+    <div>
+        <!-----------------------EasyUI的DataGird控件的放置----------------------->
+        <table id="test" style="height:400px">
+        </table>
+    </div>
+    <!--------------------------添加用户信息的弹出层---------------------------->
+    <div id="DivAddUser" class="easyui-dialog" style="width:580px;height:400px;padding:10px 20px"
+            closed="true" resizable="true" modal="true" buttons="#dlg-buttons">
+        <form id="ff" method="post" novalidate="novalidate">
+            <fieldset>
+                <legend>用户必填信息</legend>
+                <table id="tblAdd">
+                    <tr>
+                        <td><label for="UserName">登录名：</label></td>
+                        <td>
+                            <input class="easyui-validatebox" type="text" id="UserName" name="UserName" data-options="required:true,validType:'length[1,32]'" />
+                        </td>          
+                        <td><label for="RealName">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;真实姓名：</label></td>
+                        <td>
+                            <input class="easyui-validatebox" type="text" id="RealName" name="RealName"  data-options="required:true,validType:'length[1,200]'" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="UserPassword">密码：</label></td>
+                        <td>
+                            <input class="easyui-validatebox" type="text" id="UserPassword" name="UserPassword" data-options="required:true,validType:'length[1,200]'" />
+                        </td>
+                        <td><label for="OKUserPassword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;确认密码：</label></td>
+                        <td>
+                            <input class="easyui-validatebox" type="text" id="OKUserPassword" name="OKUserPassword" data-options="required:true" validType="equalTo['UserPassword']" invalidMessage="两次输入的密码不匹配" />
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <br />
+            <fieldset>
+                <legend>用户选填信息</legend>
+                <table id="tblAdd1">
+                    <tr>
+                        <td><label for="Email">EMail：</label></td>
+                        <td>
+                            <input class="easyui-validatebox" type="text" id="Email" name="Email"  data-options="validType:'email'"/>
+                        </td>
+                        <td><label for="SecurityLevel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安全级别：</label></td>
+                        <td>
+                            <select id="SecurityLevel" class="easyui-combobox" style="width:154px;" name="SecurityLevel" data-options="required:true">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="Gender">性别：</label></td>
+                        <td>
+                            <input  class="easyui-validatebox" type="radio" name="Gender" id="Boy" value="男" checked="checked" />男&nbsp;&nbsp;
+                            <input  class="easyui-validatebox" type="radio" name="Gender" id="Girl" value="女" />女&nbsp;&nbsp;
+                            <input  class="easyui-validatebox" type="radio" name="Gender" id="No" value="未知" />未知
+                        </td>
+                         <td><label for="Birthday">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;出生日期：</label></td>
+                        <td>
+                            <input id="Birthday" style="width:154px;" class="easyui-datebox" required="required" name="Birthday" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="Mobile">手机号码：</label></td>
+                        <td>
+                            <input class="easyui-numberbox" type="text" id="Mobile" name="Mobile"/>
+                        </td>
+                        <td><label for="Telephone">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;电话号码：</label></td>
+                        <td>
+                            <input class="easyui-numberbox" type="text" id="Telephone" name="Telephone"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="QICQ">QQ号码：</label></td>
+                        <td>
+                            <input class="easyui-numberbox" type="text" id="QICQ" name="QICQ" />
+                        </td>
+                          <td><label for="SortCode">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;排序码：</label></td>
+                        <td>
+                            <input class="easyui-validatebox" type="text" id="SortCode" name="SortCode" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="Description">备注信息：</label></td>
+                        <td colspan="3">
+                            <textarea  style="height:50px; width:406px;" id="Description" name="Description" ></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding-top:10px">
+                            <a href="javascript:void(0)" class="easyui-linkbutton" id="btnRegist" iconcls="icon-ok" >确定</a>
+                            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#AddUserDialog').dialog('close')">关闭</a>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

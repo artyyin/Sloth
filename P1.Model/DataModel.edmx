@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="DataModelStoreContainer">
+    <EntitySet Name="Users" EntityType="DataModel.Store.Users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Roles" EntityType="DataModel.Store.Roles" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Actions" EntityType="DataModel.Store.Actions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="R_User_Role" EntityType="DataModel.Store.R_User_Role" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="R_Role_Action" EntityType="DataModel.Store.R_Role_Action" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="R_User_Action" EntityType="DataModel.Store.R_User_Action" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_R_User_Role_User" Association="DataModel.Store.FK_R_User_Role_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="R_User_Role" EntitySet="R_User_Role" />
+    </AssociationSet>
+    <AssociationSet Name="FK_R_User_Role_Role" Association="DataModel.Store.FK_R_User_Role_Role">
+      <End Role="Role" EntitySet="Roles" />
+      <End Role="R_User_Role" EntitySet="R_User_Role" />
+    </AssociationSet>
+    <AssociationSet Name="FK_R_Role_Action_Role" Association="DataModel.Store.FK_R_Role_Action_Role">
+      <End Role="Role" EntitySet="Roles" />
+      <End Role="R_Role_Action" EntitySet="R_Role_Action" />
+    </AssociationSet>
+    <AssociationSet Name="FK_R_Role_Action_Action" Association="DataModel.Store.FK_R_Role_Action_Action">
+      <End Role="Action" EntitySet="Actions" />
+      <End Role="R_Role_Action" EntitySet="R_Role_Action" />
+    </AssociationSet>
+    <AssociationSet Name="FK_R_User_Action_User" Association="DataModel.Store.FK_R_User_Action_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="R_User_Action" EntitySet="R_User_Action" />
+    </AssociationSet>
+    <AssociationSet Name="FK_R_User_Action_Action" Association="DataModel.Store.FK_R_User_Action_Action">
+      <End Role="Action" EntitySet="Actions" />
+      <End Role="R_User_Action" EntitySet="R_User_Action" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" Nullable="true" MaxLength="32" />
+    <Property Name="Password" Type="nvarchar" Nullable="true" MaxLength="32" />
+    <Property Name="ModifyTime" Type="datetime" Nullable="false" />
+    <Property Name="DeleteMark" Type="int" Nullable="false" />
+    <Property Name="CreateByID" Type="uniqueidentifier" Nullable="true" />
+    <Property Name="CreateByName" Type="nvarchar" Nullable="true" MaxLength="32" />
+  </EntityType>
+  <EntityType Name="Roles">
+    <Key>
+      <PropertyRef Name="RoleID" />
+    </Key>
+    <Property Name="RoleID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RoleName" Type="nvarchar" Nullable="true" MaxLength="32" />
+    <Property Name="RoleType" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ModifyTime" Type="datetime" Nullable="true" />
+    <Property Name="DeleteMark" Type="int" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Actions">
+    <Key>
+      <PropertyRef Name="ActionID" />
+    </Key>
+    <Property Name="ActionID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ActionName" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="RequestURL" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="RequestHttpType" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ModifyTime" Type="datetime" Nullable="true" />
+  </EntityType>
+  <EntityType Name="R_User_Role">
+    <Key>
+      <PropertyRef Name="User_UserID" />
+      <PropertyRef Name="Role_RoleID" />
+    </Key>
+    <Property Name="User_UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Role_RoleID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="R_Role_Action">
+    <Key>
+      <PropertyRef Name="Role_RoleID" />
+      <PropertyRef Name="Action_ActionID" />
+    </Key>
+    <Property Name="Role_RoleID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Action_ActionID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="R_User_Action">
+    <Key>
+      <PropertyRef Name="R_User_Action_Action_UserID" />
+      <PropertyRef Name="Action_ActionID" />
+    </Key>
+    <Property Name="R_User_Action_Action_UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Action_ActionID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_R_User_Role_User">
+    <End Role="User" Type="DataModel.Store.Users" Multiplicity="1" />
+    <End Role="R_User_Role" Type="DataModel.Store.R_User_Role" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="R_User_Role">
+        <PropertyRef Name="User_UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_R_User_Role_Role">
+    <End Role="R_User_Role" Type="DataModel.Store.R_User_Role" Multiplicity="*" />
+    <End Role="Role" Type="DataModel.Store.Roles" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="R_User_Role">
+        <PropertyRef Name="Role_RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_R_Role_Action_Role">
+    <End Role="Role" Type="DataModel.Store.Roles" Multiplicity="1" />
+    <End Role="R_Role_Action" Type="DataModel.Store.R_Role_Action" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="R_Role_Action">
+        <PropertyRef Name="Role_RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_R_Role_Action_Action">
+    <End Role="R_Role_Action" Type="DataModel.Store.R_Role_Action" Multiplicity="*" />
+    <End Role="Action" Type="DataModel.Store.Actions" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Action">
+        <PropertyRef Name="ActionID" />
+      </Principal>
+      <Dependent Role="R_Role_Action">
+        <PropertyRef Name="Action_ActionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_R_User_Action_User">
+    <End Role="User" Type="DataModel.Store.Users" Multiplicity="1" />
+    <End Role="R_User_Action" Type="DataModel.Store.R_User_Action" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="R_User_Action">
+        <PropertyRef Name="R_User_Action_Action_UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_R_User_Action_Action">
+    <End Role="R_User_Action" Type="DataModel.Store.R_User_Action" Multiplicity="*" />
+    <End Role="Action" Type="DataModel.Store.Actions" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Action">
+        <PropertyRef Name="ActionID" />
+      </Principal>
+      <Dependent Role="R_User_Action">
+        <PropertyRef Name="Action_ActionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="DataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" >
+        <EntityContainer Name="DataModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="DataModel.UserInfo" />
+          <EntitySet Name="Roles" EntityType="DataModel.Role" />
+          <AssociationSet Name="R_User_Role" Association="DataModel.R_User_Role">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+          <EntitySet Name="Actions" EntityType="DataModel.ActionInfo" />
+          <AssociationSet Name="R_Role_Action" Association="DataModel.R_Role_Action">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="Action" EntitySet="Actions" />
+          </AssociationSet>
+          <AssociationSet Name="R_User_Action" Association="DataModel.R_User_Action">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Action" EntitySet="Actions" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Type="Guid" Name="UserID" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="UserName" Nullable="true" MaxLength="32" />
+          <Property Type="String" Name="Password" Nullable="true" MaxLength="32" />
+          <NavigationProperty Name="Role" Relationship="DataModel.R_User_Role" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="Action" Relationship="DataModel.R_User_Action" FromRole="User" ToRole="Action" />
+          <Property Type="DateTime" Name="ModifyTime" Nullable="false" />
+          <Property Type="Int32" Name="DeleteMark" Nullable="false" />
+          <Property Type="Guid" Name="CreateByID" Nullable="true" />
+          <Property Type="String" Name="CreateByName" Nullable="true" MaxLength="32" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Type="Guid" Name="RoleID" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="RoleName" Nullable="true" MaxLength="32" />
+          <NavigationProperty Name="User" Relationship="DataModel.R_User_Role" FromRole="Role" ToRole="User" />
+          <NavigationProperty Name="Action" Relationship="DataModel.R_Role_Action" FromRole="Role" ToRole="Action" />
+          <Property Type="String" Name="RoleType" Nullable="true" />
+          <Property Type="DateTime" Name="ModifyTime" Nullable="true" />
+          <Property Type="Int32" Name="DeleteMark" Nullable="true" />
+        </EntityType>
+        <Association Name="R_User_Role">
+          <End Type="DataModel.UserInfo" Role="User" Multiplicity="*" />
+          <End Type="DataModel.Role" Role="Role" Multiplicity="*" />
+        </Association>
+        <EntityType Name="ActionInfo">
+          <Key>
+            <PropertyRef Name="ActionID" />
+          </Key>
+          <Property Type="Guid" Name="ActionID" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="ActionName" Nullable="true" />
+          <NavigationProperty Name="Role" Relationship="DataModel.R_Role_Action" FromRole="Action" ToRole="Role" />
+          <Property Type="String" Name="RequestURL" Nullable="true" />
+          <Property Type="String" Name="RequestHttpType" Nullable="true" />
+          <Property Type="DateTime" Name="ModifyTime" Nullable="true" />
+        </EntityType>
+        <Association Name="R_Role_Action">
+          <End Type="DataModel.Role" Role="Role" Multiplicity="*" />
+          <End Type="DataModel.ActionInfo" Role="Action" Multiplicity="*" />
+        </Association>
+        <Association Name="R_User_Action">
+          <End Type="DataModel.UserInfo" Role="User" Multiplicity="*" />
+          <End Type="DataModel.ActionInfo" Role="Action" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DataModelStoreContainer" CdmEntityContainer="DataModelContainer">
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="IsTypeOf(DataModel.UserInfo)">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="ModifyTime" ColumnName="ModifyTime" />
+          <ScalarProperty Name="DeleteMark" ColumnName="DeleteMark" />
+          <ScalarProperty Name="CreateByID" ColumnName="CreateByID" />
+          <ScalarProperty Name="CreateByName" ColumnName="CreateByName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Roles">
+      <EntityTypeMapping TypeName="IsTypeOf(DataModel.Role)">
+        <MappingFragment StoreEntitySet="Roles">
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+          <ScalarProperty Name="RoleType" ColumnName="RoleType" />
+          <ScalarProperty Name="ModifyTime" ColumnName="ModifyTime" />
+          <ScalarProperty Name="DeleteMark" ColumnName="DeleteMark" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Actions">
+      <EntityTypeMapping TypeName="IsTypeOf(DataModel.ActionInfo)">
+        <MappingFragment StoreEntitySet="Actions">
+          <ScalarProperty Name="ActionID" ColumnName="ActionID" />
+          <ScalarProperty Name="ActionName" ColumnName="ActionName" />
+          <ScalarProperty Name="RequestURL" ColumnName="RequestURL" />
+          <ScalarProperty Name="RequestHttpType" ColumnName="RequestHttpType" />
+          <ScalarProperty Name="ModifyTime" ColumnName="ModifyTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="R_User_Role" TypeName="DataModel.R_User_Role" StoreEntitySet="R_User_Role">
+      <EndProperty Name="User">
+        <ScalarProperty Name="UserID" ColumnName="User_UserID" />
+      </EndProperty>
+      <EndProperty Name="Role">
+        <ScalarProperty Name="RoleID" ColumnName="Role_RoleID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="R_Role_Action" TypeName="DataModel.R_Role_Action" StoreEntitySet="R_Role_Action">
+      <EndProperty Name="Role">
+        <ScalarProperty Name="RoleID" ColumnName="Role_RoleID" />
+      </EndProperty>
+      <EndProperty Name="Action">
+        <ScalarProperty Name="ActionID" ColumnName="Action_ActionID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="R_User_Action" TypeName="DataModel.R_User_Action" StoreEntitySet="R_User_Action">
+      <EndProperty Name="User">
+        <ScalarProperty Name="UserID" ColumnName="R_User_Action_Action_UserID" />
+      </EndProperty>
+      <EndProperty Name="Action">
+        <ScalarProperty Name="ActionID" ColumnName="Action_ActionID" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

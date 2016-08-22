@@ -1,0 +1,109 @@
+﻿<html>
+<head>
+<meta name="viewport"content="width=device-width"/>
+    <title>Kencery(韩迎龙)&&权限设计初始页</title>
+    @*添加Jquery EasyUI的样式*@
+    <link href="~/Content/themes/default/easyui.css"rel="stylesheet"/>
+    <link href="~/Content/themes/icon.css"rel="stylesheet"/>
+    <style>
+        #top {
+            text-shadow:3px 3px 3px red,6px 6px 6px black,10px 10px 10px Blue;
+            text-align:center;
+        }
+    </style>
+    @*添加Jquery，EasyUI和easyUI的语言包的JS文件*@
+    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+    <script src="~/Scripts/jquery.easyui-1.4.5.js"></script>
+    <script src="~/Scripts/locale/easyui-lang-zh_CN.js"></script>
+    @*执行JavaScript的脚本*@
+    <script>
+        $(function(){
+        //读取动态变化的时间
+        ReadDateTimeShow();
+        });
+        //读取动态变化的时间
+        function ReadDateTimeShow()
+        {
+            /*
+            var year=newDate().getFullYear();
+            var Month=newDate().getMonth()+1;
+            var Day=newDate().getDate();
+            var Time=newDate().toLocaleTimeString();
+            var AddDate=year+"年"+Month+"月"+Day+"日,时间:"+Time;
+            */
+            $("#date").text(Date());
+        }
+        function showTab(url, title) {
+            var tab = $('#tab_center');
+            if (tab.tabs('exists', title)) {
+                tab.tabs('select', title);
+            }
+            else {
+                tab.tabs('add', {
+                    title: title,
+                    content: "<iframe scrolling='yes' frameborder='0' src='/"
+                        + url + "/Index/' style='width:100%;height:100%;'/>",
+                    closable: true
+                });
+
+            }
+        }
+    </script>
+    @StackExchange.Profiling.MiniProfiler.RenderIncludes()
+</head>
+<body class="easyui-layout">
+@*--------------------------------------网站头部开始（TOP）--------------------------------------*@
+    <div data-options="region:'north',split:true" title="MVC权限系统(Top)" style="height:90px;">
+        <div class="easyui-layout"data-options="fit:true"style="background:#ccc;">
+            <div id="top"data-options="region:'center'"style="text-align:center;">
+                <h1>陇原之家后台权限管理系统——Kencery（韩迎龙） @@ MVC权限系统</h1>
+            </div>
+            <div data-options="region:'east',split:true" style="width:500px;">
+                <m arquee>欢迎管理员 <font color="red" size="5">@ViewBag.UName</font>登录陇原之家后台管理</m>
+                <div style="float: right; padding-right:30px; font-size: 14px; padding-top: 6px;">
+                    当前时间：<b id="date"></b> &nbsp;&nbsp <a href="/Login/Index"><b>注销</b></a>
+                </div>
+            </div>
+        </div>
+    </div>
+@*--------------------------------------网站头部结束（TOP）--------------------------------------*@
+@*--------------------------------------网站菜单栏开始（Left）--------------------------------------*@
+    <div data-options="region:'west',split:true"title="菜单导航"style="width:180px;padding:1px;overflow:hidden;">
+        <div class="easyui-accordion" data-options="fit:true">
+            <div title="后台管理用户列表" data-options="iconCls:'icon-edit',collapsed:false" style="overflow:auto;padding:10px;">
+                @*------存放菜单项-------*@
+                <p><a href="#" onclick="showTab('User',$(this).html());">用户管理</a></p>
+                <p><a href="javascript:void(0)">角色管理</a></p>
+                <p><a href="javascript:void(0)">权限管理</a></p>
+            </div>
+            <div title="网站广告管理"  data-options="iconCls:'icon-edit'" style="padding:10px;">
+                content2
+            </div>
+            <div title="网站新闻管理"  data-options="iconCls:'icon-edit'" style="padding:10px">
+                content3
+            </div>
+        </div>
+    </div>
+    @*--------------------------------------网站结束（Left）--------------------------------------*@
+    @*--------------------------------------网站中间部分开始（Center）面包屑--------------------------------------*@
+    <div data-options="region:'center'"title="网站首页>用户管理〉用户列表"style="overflow:hidden;">
+        <div id="tab_center" class="easyui-tabs" style="fit">
+        </div>
+    </div>
+    @*--------------------------------------网站中间部分结束（Center）--------------------------------------*@
+    @*--------------------------------------网站右边菜单开始（Right）--------------------------------------*@
+    <div data-options="region:'east',iconCls:'icon-reload',split:true"title="日历信息"style="width:235px;">
+        <div class="easyui-calendar" style="width:230px;height:230px;"></div>
+    </div>
+    @*--------------------------------------网站右边菜单结束（Right）--------------------------------------*@
+    @*--------------------------------------网站头部开始（Foot）--------------------------------------*@
+    <div data-options="region:'south',split:true"title="MVC权限系统(Foot)"style="height:60px; background:#efefef;">
+        <div class="easyui-layout" data-options="fit:true" style="background:#ccc;">
+            <div data-options="region:'center'" style="text-align:center;padding:10px;">
+                版权所有： @@Kencery(韩迎龙) &&2013-2030
+            </div>
+        </div>
+    </div>
+    @*--------------------------------------网站头部结束（Foot）--------------------------------------*@
+</body>
+</html>
